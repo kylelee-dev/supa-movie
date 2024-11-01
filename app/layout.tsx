@@ -28,7 +28,11 @@ export default function RootLayout({ children }) {
               referrerPolicy="no-referrer"
             />
           </head>
-          <body className={inter.className}><Header />{children}<Footer /></body>
+          <body className={inter.className}>
+            <Header />
+            {children}
+            <Footer />
+          </body>
         </html>
       </ThemeProvider>
     </ReactQueryClientProvider>

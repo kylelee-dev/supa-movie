@@ -18,3 +18,15 @@ export async function getAllMovies() {
 
   return data;
 }
+
+export async function searchMovies(search = "") {
+  const supabase = await createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("movie")
+    .select("*")
+    .like("title", `%${search}%`);
+
+  handleError(error);
+  return data;
+}

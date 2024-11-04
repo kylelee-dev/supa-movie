@@ -1,11 +1,22 @@
 import { getMovie } from "actions/movieActions";
 import UI from "./ui";
 
-export default async function MovieDetail({ params }) {
-  // Doing on the serverside for metadata (SEO)
+export async function generateMetadata({ params, searchParams }) {
   const movie = await getMovie(params.id);
+  return {
+    title: movie.title,
+    description: movie.overview,
+    openGraph: {
+      images: [movie.image_url],
+    },
+  };
+}
+export default async function MovieDetail({ params }) {
+  //Serverside for metadata (SEO)
+  const { id } = await params;
+  const movie = await getMovie(id);
   return (
-    <main className="my-16 py-16 bg-blue-50 w-full absolute top-0 bottom-0 left-0 right-0">
+    <main className="my-14 py-16 bg-blue-50 w-full absolute top-0 bottom-0 left-0 right-0">
       {movie ? <UI movie={movie} /> : <div>Movie does not exist.</div>}
     </main>
   );

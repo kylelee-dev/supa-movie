@@ -19,16 +19,17 @@ export async function getAllMovies() {
   return data;
 }
 
-export async function searchMovies(search = "") {
+export async function searchMovies({ search = "", page, pageSize }) {
   const supabase = await createServerSupabaseClient();
 
-  const { data, error } = await supabase
+  const { data, count, error } = await supabase
     .from("movie")
     .select("*")
-    .like("title", `%${search}%`);
-
+    .like("title", `%${search}%`)
+    .range((page - 1) * pageSize, page * pageSize - 1);
+  const hasNextPage = count > page * pageSize - 1;
   handleError(error);
-  return data;
+  return { data, page, pageSize, hasNextPage };
 }
 export async function getMovie(id) {
   const supabase = await createServerSupabaseClient();
@@ -39,7 +40,7 @@ export async function getMovie(id) {
     .eq("id", id)
     .maybeSingle(); // One or Null
 
-    handleError(error);
+  handleError(error);
 
-    return data;
+  return data;
 }
